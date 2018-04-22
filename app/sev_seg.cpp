@@ -27,15 +27,36 @@ int sev_seg::display(int num)
 {
 	int reg = 1;
 	int val = 0;
-	while (num > 0)
+	all_off();
+	if (num < 0)
 	{
-		if (reg < 9)
+		num *= -1;
+		while (num > 0)
 		{
-			val = num % 10;
-			write_out(reg,val);
-			++reg;
+			if (reg < 8)
+			{
+				val = num % 10;
+				write_out(reg, val);
+				++reg;
+			}
+			num /= 10;
 		}
-		num /= 10;
+		write_out(reg, 10);
+		return 0;
+	}
+	if (num > 0)
+	{
+		while (num > 0)
+		{
+			if (reg < 9)
+			{
+				val = num % 10;
+				write_out(reg, val);
+				++reg;
+			}
+			num /= 10;
+		}
+		return 0;
 	}
 	return 0;
 }
