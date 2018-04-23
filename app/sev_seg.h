@@ -5,7 +5,6 @@
 
 #include <Arduino.h>
 #include <SPI.h>
-#include <inttypes.h>
 #include <errno.h>
 
 #define INTENSITY_REG 0x0A
@@ -22,21 +21,22 @@ class sev_seg
 {
 public:
 	sev_seg();
-	sev_seg(uint cs_pin);
-	int set_intensity(uint intensity);
-	int set_segments(uint segments);
-	int set_num_digits(uint digit);
+	sev_seg(unsigned int cs_pin);
+	int set_intensity(unsigned int intensity);
+	int set_segments(unsigned int segments);
+	int set_num_digits(unsigned int digit);
 	int display(int num);
-	int display(uint digit, uint num);
+	int display(unsigned int digit, unsigned int num);
+	int display_binary(unsigned char byte);
   void all_off();
 
 private:
-	void write_out(uint reg, uint val);
+	void write_out(unsigned int reg, unsigned int val);
 	void set_spi();
 	void init();
-	uint m_cs_pin;
-	uint m_intensity;
-	uint m_num_digits;
+	unsigned int m_cs_pin;
+	unsigned int m_intensity;
+	unsigned int m_num_digits;
 };
 
 #endif /* SEG_H */

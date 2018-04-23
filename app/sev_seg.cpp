@@ -7,7 +7,7 @@ sev_seg::sev_seg() : m_cs_pin(DEFAULT_CS_PINT), m_intensity(DEFAULT_INTENSITY),
 	init();
 }
 
-sev_seg::sev_seg(uint cs_pin) : m_cs_pin(cs_pin), m_intensity(DEFAULT_INTENSITY),
+sev_seg::sev_seg(unsigned int cs_pin) : m_cs_pin(cs_pin), m_intensity(DEFAULT_INTENSITY),
 								m_num_digits(DEFAULT_NUM_DIGITS)
 {
 	init();
@@ -22,6 +22,16 @@ void sev_seg::init()
 	write_out(SCANLIMIT_REG, m_num_digits); //set number of digits to light
 	all_off();
 }
+
+int sev_seg::display_binary(unsigned char byte)
+{
+	for(int i =1; i < 9; ++i)
+	{
+		write_out(i, byte%2);
+		byte /=2;
+	}
+}
+
 
 int sev_seg::display(int num)
 {
@@ -58,9 +68,12 @@ int sev_seg::display(int num)
 		}
 		return 0;
 	}
+
+	write_out(reg,0);
 	return 0;
 }
-int sev_seg::display(uint digit, uint num)
+
+int sev_seg::display(unsigned int digit, unsigned int num)
 {
 
 	if (digit < 1 || digit > 8 || num > 15)
@@ -69,7 +82,7 @@ int sev_seg::display(uint digit, uint num)
 	return 0;
 }
 
-int sev_seg::set_intensity(uint intensity)
+int sev_seg::set_intensity(unsigned int intensity)
 {
 	if (intensity > 0xF)
 		return EINVAL;
@@ -78,7 +91,7 @@ int sev_seg::set_intensity(uint intensity)
 	return 0;
 }
 
-int sev_seg::set_num_digits(uint digits)
+int sev_seg::set_num_digits(unsigned int digits)
 {
 	if (digits > 0x7)
 		return EINVAL;
@@ -86,7 +99,7 @@ int sev_seg::set_num_digits(uint digits)
 	return 0;
 }
 
-void sev_seg::write_out(uint reg, uint val)
+void sev_seg::write_out(unsigned int reg, unsigned int val)
 {
 	digitalWrite(m_cs_pin, LOW);
 	SPI.transfer(reg);
